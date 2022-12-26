@@ -60,6 +60,12 @@ function displayItems() {
     <label class="form-check-label" for="flexSwitchCheckDefault">Completed</label>
     </div>
     </td>
+    <td class="tooltiptd">
+    <div class="tooltip1">
+    ?
+    <span class="tooltiptext">Tooltip text</span>
+    </div>
+    </td>
     </tr>`;
   });
   tableContent.innerHTML = html;
@@ -69,6 +75,7 @@ function displayItems() {
   editTask();
   complete();
   unClompleteRed();
+  checkWithcolor();
 }
 // console.log(taskobj);
 
@@ -122,8 +129,8 @@ function editTask() {
 function saveButton() {
   let savetaskbtn = document.getElementById("savetaskbtn");
   savetaskbtn.addEventListener("click", () => {
-    let z = document.getElementById("saveindex").value;
-    taskobj[z].inputdata = inputTaskData.value;
+    let indexOfInputHidden = document.getElementById("saveindex").value;
+    taskobj[indexOfInputHidden].inputdata = inputTaskData.value;
     savetaskbtn.style.display = "none";
     addTask.style.display = "block";
     localStorage.setItem("localTask", JSON.stringify(taskobj));
@@ -139,33 +146,33 @@ window.onload = () => {
 
 function complete() {
   let checkbox = document.querySelectorAll(".checkMe");
-  let colorChange = document.querySelectorAll(".colorChange");
+  // let colorChange = document.querySelectorAll(".colorChange");
   let colorChangetr = document.querySelectorAll(".trbg");
   // console.log(colorChange);
   // console.log(checkbox);
   checkbox.forEach((check, index) => {
+    // checkbox[index].checked = taskobj[index].complete;
     check.addEventListener("change", function (e) {
       // console.log("i am clicked", index);
       taskobj[index].complete = e.target.checked;
       localStorage.setItem("localTask", JSON.stringify(taskobj));
       if (taskobj[index].complete) {
-        // console.log("Checkbox is checked..");
-        // colorChange[index].style.color = "green";
-        // taskobj[index].complete = true;
         colorChangetr[index].style.color = "green";
-        // console.log("task value=>", taskobj[index].complete);
-        // console.log("checked True=>", this.checked);
       } else {
-        // console.log(this.checked);
-        // console.log("Checkbox is not checked..");
-        // colorChange[index].style.color = "black";
-        // taskobj[index].complete = false;
         colorChangetr[index].style.color = "red";
-
-        // console.log("task value=>", taskobj[index].complete);
-        // console.log("checked True=>", this.checked);
       }
     });
+  });
+}
+
+function checkWithcolor() {
+  let checkbox = document.querySelectorAll(".checkMe");
+  let colorChangetr = document.querySelectorAll(".trbg");
+  checkbox.forEach((check, index) => {
+    checkbox[index].checked = taskobj[index].complete;
+    if (taskobj[index].complete) {
+      colorChangetr[index].style.color = "green";
+    }
   });
 }
 
