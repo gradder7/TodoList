@@ -10,6 +10,8 @@ taskobj = localStorage.getItem("localTask")
 addTask.addEventListener("click", () => {
   let inputdata = inputTaskData.value;
   let user = {
+    username: "",
+    password: "",
     inputdata: inputdata,
     complete: false,
   };
@@ -77,17 +79,12 @@ function displayItems() {
   unClompleteRed();
   checkWithcolor();
 }
-// console.log(taskobj);
 
 //delete
 function deleteTask() {
   let delbtn = document.querySelectorAll(".delbtn");
-  //   console.log(delbtn);
   delbtn.forEach((del, index) => {
-    // console.log(del);
     del.addEventListener("click", () => {
-      //   console.log("hello",[index]);
-      // console.log(taskobj);
       taskobj.splice(index, 1);
       localStorage.setItem("localTask", JSON.stringify(taskobj));
       location.reload();
@@ -97,12 +94,19 @@ function deleteTask() {
 
 function deleteAll() {
   let delAll = document.getElementById("deleteallbtn");
+  let savetaskbtn = document.getElementById("savetaskbtn");
+  let addTask = document.getElementById("addtaskbtn");
+  let inputdata = inputTaskData.value;
   //   console.log(delAll);
   delAll.addEventListener("click", () => {
     // console.log(taskobj.length);
     taskobj.splice(0, taskobj.length);
+    savetaskbtn.style.display = "none";
+    addTask.style.display = "block";
+    inputTaskData.value = "";
     localStorage.setItem("localTask", JSON.stringify(taskobj));
     location.reload();
+    displayItems();
   });
 }
 
@@ -111,15 +115,12 @@ function editTask() {
   let savetaskbtn = document.getElementById("savetaskbtn");
   let addTask = document.getElementById("addtaskbtn");
   let saveIndex = document.getElementById("saveindex");
-  // console.log(editTask1);
   editTask1.forEach((btn, i) => {
     btn.addEventListener("click", () => {
       console.log(btn);
       inputTaskData.value = taskobj[i].inputdata;
-      // console.log('task edit index',i)
       addTask.style.display = "none";
       savetaskbtn.style.display = "block";
-      // console.log(saveIndex.value);
       saveIndex.value = i;
       saveButton();
     });
@@ -135,7 +136,6 @@ function saveButton() {
     addTask.style.display = "block";
     localStorage.setItem("localTask", JSON.stringify(taskobj));
     displayItems();
-    // inputTaskData.value = "";
     location.reload();
   });
 }
@@ -146,14 +146,9 @@ window.onload = () => {
 
 function complete() {
   let checkbox = document.querySelectorAll(".checkMe");
-  // let colorChange = document.querySelectorAll(".colorChange");
   let colorChangetr = document.querySelectorAll(".trbg");
-  // console.log(colorChange);
-  // console.log(checkbox);
   checkbox.forEach((check, index) => {
-    // checkbox[index].checked = taskobj[index].complete;
     check.addEventListener("change", function (e) {
-      // console.log("i am clicked", index);
       taskobj[index].complete = e.target.checked;
       localStorage.setItem("localTask", JSON.stringify(taskobj));
       if (taskobj[index].complete) {
@@ -185,12 +180,16 @@ function unClompleteRed() {
 
 function countTask() {
   let countCountainer = document.getElementById("divcount");
-  // let checkbox = document.querySelector(".checkMe");
-  // console.log(checkbox);
-  // console.log(countCountainer);
   let count = document.querySelectorAll('input[type="checkbox"]:checked');
   console.log(count);
   countCountainer.innerHTML = `
       <h2 id="heading">0/${taskobj.length}</h2>`;
 }
 countTask();
+
+function displayUserName() {
+  let nameDisplay = document.getElementById("nameUser");
+  let a = "hi";
+  nameDisplay.innerText = `Welcome ${a}`;
+}
+displayUserName();
