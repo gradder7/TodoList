@@ -1,13 +1,14 @@
+displayItems();
 let addTask = document.getElementById("addtaskbtn");
 let inputTaskData = document.getElementById("addtaskinput");
 let savetaskbtn = document.getElementById("savetaskbtn");
 
 //global
-taskobj = localStorage.getItem("localTask")
-  ? JSON.parse(localStorage.getItem("localTask"))
-  : [];
 
 addTask.addEventListener("click", () => {
+  let taskobj = localStorage.getItem("localTask")
+    ? JSON.parse(localStorage.getItem("localTask"))
+    : [];
   let inputdata = inputTaskData.value;
   let user = {
     username: "",
@@ -33,13 +34,17 @@ addTask.addEventListener("click", () => {
     //push to an array
     taskobj.push(user);
     localStorage.setItem("localTask", JSON.stringify(taskobj));
-    displayItems();
+    inputTaskData.value = "";
     //it will reload on every entry
-    location.reload();
+    // location.reload();
   }
+  displayItems();
 });
 
 function displayItems() {
+  let taskobj = localStorage.getItem("localTask")
+    ? JSON.parse(localStorage.getItem("localTask"))
+    : [];
   let tableContent = document.getElementById("addedtasklist");
   let html = "";
   taskobj.forEach((element, index) => {
@@ -78,16 +83,18 @@ function displayItems() {
   complete();
   unClompleteRed();
   checkWithcolor();
+  searchText();
 }
 
 //delete
 function deleteTask() {
   let delbtn = document.querySelectorAll(".delbtn");
+  let taskobj = JSON.parse(localStorage.getItem("localTask"));
   delbtn.forEach((del, index) => {
     del.addEventListener("click", () => {
       taskobj.splice(index, 1);
       localStorage.setItem("localTask", JSON.stringify(taskobj));
-      location.reload();
+      displayItems();
     });
   });
 }
@@ -96,8 +103,7 @@ function deleteAll() {
   let delAll = document.getElementById("deleteallbtn");
   let savetaskbtn = document.getElementById("savetaskbtn");
   let addTask = document.getElementById("addtaskbtn");
-  let inputdata = inputTaskData.value;
-  //   console.log(delAll);
+  let taskobj = JSON.parse(localStorage.getItem("localTask")); //   console.log(delAll);
   delAll.addEventListener("click", () => {
     // console.log(taskobj.length);
     taskobj.splice(0, taskobj.length);
@@ -105,7 +111,6 @@ function deleteAll() {
     addTask.style.display = "block";
     inputTaskData.value = "";
     localStorage.setItem("localTask", JSON.stringify(taskobj));
-    location.reload();
     displayItems();
   });
 }
@@ -115,9 +120,9 @@ function editTask() {
   let savetaskbtn = document.getElementById("savetaskbtn");
   let addTask = document.getElementById("addtaskbtn");
   let saveIndex = document.getElementById("saveindex");
+  let taskobj = JSON.parse(localStorage.getItem("localTask"));
   editTask1.forEach((btn, i) => {
     btn.addEventListener("click", () => {
-      console.log(btn);
       inputTaskData.value = taskobj[i].inputdata;
       addTask.style.display = "none";
       savetaskbtn.style.display = "block";
@@ -129,24 +134,25 @@ function editTask() {
 
 function saveButton() {
   let savetaskbtn = document.getElementById("savetaskbtn");
+  let taskobj = JSON.parse(localStorage.getItem("localTask"));
   savetaskbtn.addEventListener("click", () => {
     let indexOfInputHidden = document.getElementById("saveindex").value;
     taskobj[indexOfInputHidden].inputdata = inputTaskData.value;
     savetaskbtn.style.display = "none";
     addTask.style.display = "block";
     localStorage.setItem("localTask", JSON.stringify(taskobj));
+    inputTaskData.value = "";
     displayItems();
     location.reload();
   });
 }
 
-window.onload = () => {
-  displayItems();
-};
-
 function complete() {
   let checkbox = document.querySelectorAll(".checkMe");
   let colorChangetr = document.querySelectorAll(".trbg");
+  taskobj = localStorage.getItem("localTask")
+    ? JSON.parse(localStorage.getItem("localTask"))
+    : [];
   checkbox.forEach((check, index) => {
     check.addEventListener("change", function (e) {
       taskobj[index].complete = e.target.checked;
@@ -163,6 +169,9 @@ function complete() {
 function checkWithcolor() {
   let checkbox = document.querySelectorAll(".checkMe");
   let colorChangetr = document.querySelectorAll(".trbg");
+  taskobj = localStorage.getItem("localTask")
+    ? JSON.parse(localStorage.getItem("localTask"))
+    : [];
   checkbox.forEach((check, index) => {
     checkbox[index].checked = taskobj[index].complete;
     if (taskobj[index].complete) {
@@ -178,8 +187,12 @@ function unClompleteRed() {
   });
 }
 
+// todo-> complete this
 function countTask() {
   let countCountainer = document.getElementById("divcount");
+  taskobj = localStorage.getItem("localTask")
+    ? JSON.parse(localStorage.getItem("localTask"))
+    : [];
   let count = document.querySelectorAll('input[type="checkbox"]:checked');
   console.log(count);
   countCountainer.innerHTML = `
@@ -193,3 +206,21 @@ function displayUserName() {
   nameDisplay.innerText = `Welcome ${a}`;
 }
 displayUserName();
+
+function searchText() {
+  let seacrchTextBox = document.getElementById("searchtextbox");
+  seacrchTextBox.addEventListener("input", function () {
+    let trlist = document.querySelectorAll("tr");
+    let trArray = Array.from(trlist);
+    trArray.forEach((element) => {
+      let searchedText = element.getElementsByTagName("td")[0].innerText;
+      let searchValue = seacrchTextBox.value;
+      let re = new RegExp(searchValue, "gi");
+      if (searchedText.match(re)) {
+        element.style.display = "table-row";
+      } else {
+        element.style.display = "none";
+      }
+    });
+  });
+}
