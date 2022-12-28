@@ -16,7 +16,7 @@ function userValidation(data) {
     for (let i = 0; i < data.length; i++) {
       if (email === data[i].email && password === data[i].password) {
         console.log("sucessfull");
-        window.location.href = "index.html";
+        window.location.href = "main.html";
         return;
       }
     }
