@@ -37,10 +37,12 @@ addTask.addEventListener("click", () => {
     inputTaskData.value = "";
     //it will reload on every entry
     // location.reload();
+
   }
   displayItems();
 });
 
+//display
 function displayItems() {
   let taskobj = localStorage.getItem("localTask")
     ? JSON.parse(localStorage.getItem("localTask"))
